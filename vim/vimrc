@@ -1,0 +1,156 @@
+"   This is the personal .vimrc file of Nickson Kaigi.
+"   While much of it is beneficial for general use, I would
+"   recommend picking out the parts you want and understand,
+"   as I have done from other notable vim purists
+"
+
+set nocompatible                "Use Vim settings, rather than Vi settings
+                                "Be IMproved
+
+filetype off                    "required!
+
+" I use Vundle https://github.com/gmarik/vundle as my
+" preferred plugin manager.... never got the hang of
+" vim-pathogen (no offence to the pathogen community)
+"
+"
+"
+set wildmenu
+set guioptions=-T
+match ErrorMsg '\s\+$'
+set iskeyword+=_,$,@,%,#,-
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+Bundle 'gmarik/vundle'
+Bundle 'sophacles/vim-bundle-mako'
+Bundle 'paranoida/vim-airlineish'
+Bundle 'bling/vim-airline'
+Bundle 'scrooloose/nerdtree'
+Bundle 'kien/rainbow_parentheses.vim'
+Bundle 'jnwhiteh/vim-golang'
+Bundle 'ervandew/supertab'
+Bundle 'davidhalter/jedi-vim'
+filetype plugin indent on       "required!
+
+
+set backspace=indent,eol,start  "allow backspacing over everything in insert mode
+
+set history=50                  "keep 50 lines of command line history
+
+set ruler                       "show the cursor position all the time
+
+set showcmd                     "display incomplete commands
+
+set incsearch                   "do incremental searching
+
+set nu                          "show line numbers
+
+set expandtab                   "use spaces instead of tabs
+
+set tabstop=4                   "insert 4 spaces whenever the tab key is pressed
+
+set shiftwidth=4                "set indentation to 4 spaces
+
+set hlsearch                    "highlight search terms
+
+set ic                          "Ignore Case during searches
+
+set autoindent                  "start new line at the same indentation level
+
+syntax enable                   "syntax highlighting
+
+set cmdheight=1                 "The commandbar height
+
+set showmatch                   "Show matching bracets when text indicator is over them
+
+set nobackup                    " do not keep backup files, it's 70's style cluttering
+
+set noswapfile                  " do not write annoying intermediate swap files,
+                                "    who did ever restore from swap files
+                                "    anyway?
+                                "    https://github.com/nvie/vimrc/blob/master/vimrc#L141
+
+
+" VIM airline config
+
+set laststatus=2                " Solves: statusline does not appear until I create a split
+
+set noshowmode                  " Get rid of the default mode indicator
+
+let g:airline_powerline_fonts = 1   " Use powerline symbols
+" Enable the list of buffers
+let g:airline#extensions#tabline#enabled = 1
+" " Show just the filename
+let g:airline#extensions#tabline#fnamemod = ':t'
+set t_Co=256                    " Force Vim into 246 color mode, to display airline colors
+
+let g:airline_theme = 'airlineish'    " Self explanatory
+" End of airline configs
+if &t_Co >= 256 || has("gui_running")
+       colorscheme delek
+endif
+"colorscheme delek      " Original colorscheme on the bash shell... I got used to it
+
+
+let g:promptline_theme = 'airline'
+set ttimeoutlen=50              "Solves: there is a pause when leaving insert mode
+
+" highlight characters past column 80
+augroup vimrc_autocmds
+    autocmd!
+    autocmd FileType python  highlight Excess ctermbg=DarkGrey guibg=Black
+    autocmd FileType python  match Excess /\%80v.*/
+    autocmd FileType python  set nowrap
+augroup END
+
+set splitbelow                  " Horizontal splits open below current file
+
+set splitright                  " Vertical splits open to the right of the current file
+
+set wildmode=longest,list       " Pressing <Tab> shows command suggestions similar to pressing <Tab>
+                                " in bash
+" Mark characters exceeding 80 characters lines
+highlight Excess ctermbg=LightGrey guibg=Black
+match Excess /\%80v.*/
+highlight ColorColumn ctermbg=darkgrey guibg=darkgrey
+set colorcolumn=80
+
+" highlight cursorline and make it bold
+set cursorline
+highlight Cursorline cterm=bold ctermbg=darkgrey
+" Mappings to traverse buffer list
+nnoremap <silent> [b :bprevious<CR>
+nnoremap <silent> ]b :bnext<CR>
+nnoremap <silent> [B :bfirst<CR>
+nnoremap <silent> ]B :blast<CR>
+
+"Easy expansion of the active file directory
+cnoremap <expr> %%  getcmdtype() == ':' ? expand('%:h').'/' : '%%'
+
+"Shortcut to Mute Highlighting
+nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
+
+map <C-l> :tabnext<CR>
+map <C-h> :tabprevious<CR>
+map <C-n> :tabnew<CR>
+map <C-m> :tabclose<CR>
+map <C-j> <C-W>j<C-W>_
+map <C-k> <C-W>k<C-W>_
+vmap <C-c> "+y
+map <C-r> :RainbowParenthesesToggle<CR>
+map <F10> :q<cr>
+map <F2> :nohl<CR>
+map <F3> :set nu!<CR>
+map <F4> :NERDTreeToggle<CR>
+map <F8> :set spell! spelllang=pl<CR>
+map <F9> :set spell! spelllang=en<CR>
+set pastetoggle=<F12>
+
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
+
+autocmd FileType c,cpp,python,go,rst autocmd BufWritePre <buffer> :%s/\s\+$//e
+
