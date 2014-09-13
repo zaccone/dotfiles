@@ -1,36 +1,36 @@
-"   This is the personal .vimrc file of Nickson Kaigi.
-"   While much of it is beneficial for general use, I would
-"   recommend picking out the parts you want and understand,
-"   as I have done from other notable vim purists
-"
+
 
 set nocompatible                "Use Vim settings, rather than Vi settings
                                 "Be IMproved
 
 filetype off                    "required!
 
-" I use Vundle https://github.com/gmarik/vundle as my
-" preferred plugin manager.... never got the hang of
-" vim-pathogen (no offence to the pathogen community)
-"
-"
-"
+
+let mapleader=","
+
 set wildmenu
-set guioptions=-T
-match ErrorMsg '\s\+$'
 set iskeyword+=_,$,@,%,#,-
 set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+call vundle#begin()
+Plugin 'gmarik/vundle'
+Plugin 'sophacles/vim-bundle-mako'
+Plugin 'paranoida/vim-airlineish'
+Plugin 'bling/vim-airline'
+Plugin 'scrooloose/nerdtree'
+Plugin 'kien/rainbow_parentheses.vim'
+Plugin 'ervandew/supertab'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'nvie/vim-flake8'
+Plugin 'fholgado/minibufexpl.vim'
+Plugin 'Valloric/YouCompleteMe.git'
+Plugin 'davidhalter/jedi-vim'
+Plugin 'Soares/butane.vim'
+Plugin 'octol/vim-cpp-enhanced-highlight'
+Plugin 'fatih/vim-go'
+Plugin 'fatih/molokai'
+Plugin 'vim-scripts/zoom.vim'
+call vundle#end()
 
-Bundle 'gmarik/vundle'
-Bundle 'sophacles/vim-bundle-mako'
-Bundle 'paranoida/vim-airlineish'
-Bundle 'bling/vim-airline'
-Bundle 'scrooloose/nerdtree'
-Bundle 'kien/rainbow_parentheses.vim'
-Bundle 'jnwhiteh/vim-golang'
-Bundle 'ervandew/supertab'
-Bundle 'davidhalter/jedi-vim'
 filetype plugin indent on       "required!
 
 
@@ -87,8 +87,23 @@ set t_Co=256                    " Force Vim into 246 color mode, to display airl
 
 let g:airline_theme = 'airlineish'    " Self explanatory
 " End of airline configs
-if &t_Co >= 256 || has("gui_running")
-       colorscheme delek
+
+if &t_Co >= 256
+    colorscheme delek
+endif
+
+if has("gui_running")
+    colorscheme solarized
+    set background=dark
+    set guioptions-=T
+    set guioptions+=e
+    set guioptions-=L
+    set guioptions-=r
+    set guitablabel=%M\ %t
+    "set guifont=Inconsolata\ 11
+else
+    let g:solarized_termcolors=16
+    colorscheme delek
 endif
 "colorscheme delek      " Original colorscheme on the bash shell... I got used to it
 
@@ -128,16 +143,19 @@ nnoremap <silent> ]B :blast<CR>
 "Easy expansion of the active file directory
 cnoremap <expr> %%  getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
-"Shortcut to Mute Highlighting
-nnoremap <silent> <C-l> :<C-u>nohlsearch<CR><C-l>
-
 map <C-l> :tabnext<CR>
 map <C-h> :tabprevious<CR>
 map <C-n> :tabnew<CR>
 map <C-m> :tabclose<CR>
-map <C-j> <C-W>j<C-W>_
-map <C-k> <C-W>k<C-W>_
-vmap <C-c> "+y
+
+" Copy & Paste & Cut
+map <C-c> "+y
+map <C-z> "+gP
+map <C-x> "+x
+
+" Highlight everything
+map <C-a> ggVG
+
 map <C-r> :RainbowParenthesesToggle<CR>
 map <F10> :q<cr>
 map <F2> :nohl<CR>
@@ -152,5 +170,32 @@ au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
 
-autocmd FileType c,cpp,python,go,rst autocmd BufWritePre <buffer> :%s/\s\+$//e
+set list
+set listchars=tab:>-,trail:~
 
+autocmd BufWritePost *.py call Flake8()
+
+" MiniBufExpl colors
+
+map <leader>e :MBEOpen<cr>
+map <leader>c :MBEClose<cr>
+map <leader>t :MBEToggle<cr>
+
+hi MBENormal               guifg=#808080 guibg=fg
+hi MBEChanged              guifg=#CD5907 guibg=fg
+hi MBEVisibleNormal        guifg=#5DC2D6 guibg=fg
+hi MBEVisibleChanged       guifg=#F1266F guibg=fg
+hi MBEVisibleActiveNormal  guifg=#A6DB29 guibg=fg
+hi MBEVisibleActiveChanged guifg=#F1266F guibg=fg
+
+" Butane.vim mappings
+noremap <leader>bd :Bclose<CR>      " Close the buffer.
+noremap <leader>bl :ls<CR>          " List buffers.
+noremap <leader>bn :bn<CR>          " Next buffer.
+noremap <leader>bp :bp<CR>          " Previous buffer.
+noremap <leader>bt :b#<CR>          " Toggle to most recently used buffer.
+noremap <leader>bx :Bclose!<CR>     " Close the buffer & discard changes.
+
+
+"autocmd FileType c,cpp,py,go,rst autocmd BufWritePre <buffer> :%s/\s\+$//e
+autocmd BufWritePre * :%s/\s\+$//e
