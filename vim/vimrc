@@ -10,9 +10,9 @@ let mapleader=","
 
 set wildmenu
 set iskeyword+=_,$,@,%,#,-
-set rtp+=~/.vim/bundle/vundle/
+set rtp+=~/.vim/bundle/Vundle.vim/
 call vundle#begin()
-Plugin 'gmarik/vundle'
+Plugin 'gmarik/Vundle.vim'
 Plugin 'sophacles/vim-bundle-mako'
 Plugin 'paranoida/vim-airlineish'
 Plugin 'bling/vim-airline'
@@ -28,7 +28,6 @@ Plugin 'Soares/butane.vim'
 Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'fatih/vim-go'
 Plugin 'fatih/molokai'
-Plugin 'vim-scripts/zoom.vim'
 call vundle#end()
 
 filetype plugin indent on       "required!
