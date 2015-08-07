@@ -18,7 +18,6 @@ Plugin 'ervandew/supertab'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'nvie/vim-flake8'
 Plugin 'fholgado/minibufexpl.vim'
-Plugin 'Valloric/YouCompleteMe.git'
 Plugin 'davidhalter/jedi-vim'
 Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'fatih/vim-go'
@@ -28,7 +27,7 @@ call vundle#end()
 syntax enable                   "syntax highlighting
 filetype plugin indent on       "required!
 set backspace=indent,eol,start  "allow backspacing over everything in insert mode
-set history=500                 "keep 50 lines of command line history
+set history=500                 "keep 500 lines of command line history
 set ruler                       "show the cursor position all the time
 set showcmd                     "display incomplete commands
 set incsearch                   "do incremental searching
@@ -48,15 +47,14 @@ set noswapfile                  " do not write annoying intermediate swap files,
                                 "    https://github.com/nvie/vimrc/blob/master/vimrc#L141
 set laststatus=2                " Solves: statusline does not appear until I create a split
 set noshowmode                  " Get rid of the default mode indicator
-set list
-set listchars=tab:>-,trail:~
 set splitbelow                  " Horizontal splits open below current file
 set splitright                  " Vertical splits open to the right of the current file
 set wildmode=longest,list       " Pressing <Tab> shows command suggestions similar to pressing <Tab>
                                 " in bash
-
+set nolist
+"set listchars=trail:~,tab:>-       " mark trailing spaces only
 " VIM airline config
-let g:airline_powerline_fonts = 1   " Use powerline symbols
+    let g:airline_powerline_fonts = 1   " Use powerline symbols
 " Enable the list of buffers
 let g:airline#extensions#tabline#enabled = 1
 " " Show just the filename
@@ -72,7 +70,6 @@ if has("gui_running")
     set guioptions-=L
     set guioptions-=r
     set guitablabel=%M\ %t
-    "set guifont=Inconsolata\ 11
 else
     let g:solarized_termcolors=256
     let g:solarized_contrast="normal"
@@ -81,6 +78,7 @@ else
     colorscheme solarized
 endif
 
+set guifont=Monaco\ for\ Powerline\ 10
 let g:promptline_theme = 'airline'
 set ttimeoutlen=50              "Solves: there is a pause when leaving insert mode
 
@@ -90,12 +88,12 @@ augroup vimrc_autocmds
     autocmd FileType python  highlight Excess ctermbg=DarkGrey guibg=Black
     autocmd FileType python  match Excess /\%80v.*/
     autocmd FileType python  set nowrap
+    autocmd FileType python set listchars=tab:>-,trail:~
 augroup END
 
 
 " Mark characters exceeding 80 characters lines
 highlight Excess ctermbg=LightGrey guibg=Black
-match Excess /\%80v.*/
 highlight ColorColumn ctermbg=darkgrey guibg=darkgrey
 set colorcolumn=80
 
@@ -160,3 +158,6 @@ noremap <leader>bx :Bclose!<CR>     " Close the buffer & discard changes.
 
 "autocmd FileType c,cpp,py,go,rst autocmd BufWritePre <buffer> :%s/\s\+$//e
 autocmd BufWritePre * :%s/\s\+$//e
+
+" jedi configuration
+let g:jedi#popup_select_first = 0
